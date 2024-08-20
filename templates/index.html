@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkinGuard AI</title>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='stylesheet.css') }}">
+</head>
+
+<body>
+    <h1>SkinGuard AI</h1>
+    <p>your diagnostical AI assistant</p>
+
+    <div id="navigation-menu">
+        <button class="nav-button" onclick="navigatePage(-1)">Home</button>
+        <button class="nav-button" onclick="navigatePage(0)">Skin Cancer AI</button>
+        <button class="nav-button" onclick="navigatePage(1)">model 2</button>
+        <button class="nav-button" onclick="navigatePage(2)">model 3</button>
+        <button class="nav-button" onclick="navigatePage(0)">All Models</button>
+    </div>
+
+    <div id="home-page">
+        <p>blah blah blah</p>
+    </div>
+
+    <!-- the below two divs apply to all model pages-->
+    <div id="instructions">
+        <h2 id="model-name"></h2>
+        <p id="model-description"></p>
+        <h3>How to use our service</h3>
+        <p>blah blah blah</p>
+    </div>
+
+    <div id="terms-and-conditions">
+        <p>By clicking "I Agree", you agree to our <a href="https://www.youtube.com/shorts/Tc_ImXKfs70" target="parent">terms and conditions</a></p>
+        <button class="default-button" onclick="agreeToTerms()">I Agree</button>
+    </div>
+
+    <div id="ai-classification-div">
+        <h2 class="page-title">Upload an Image</h2>    
+        <form id="uploadForm"> <!--if multiple models, then each one needs a unique form?-->
+            <label for="file" class="file-label">Choose an image:</label>
+            <input type="file" id="file" name="file" accept="image/*" required>
+            <img id="preview" src="" alt="Image preview">
+            <!-- Changed input type to file and added accept attribute -->
+            <br><br>
+            <input type="submit" value="Upload" class="upload-button">
+        </form>
+    </div>
+
+    <div id="results-div">
+        <h3 id="result"></h3>
+    </div>
+    
+    <div id="footer">
+        <p>
+            This is a sample of what the footer in our actual website will look like. 
+            There will be button leading to pages such as FAQs, mailing lists, etc.
+        </p>
+    </div>
+</body>
+
+</html>
