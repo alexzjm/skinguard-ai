@@ -13,7 +13,7 @@ import torch.nn.functional as F
 import torch.optim as optim
 import torchvision.models
 
-# PYTORCH INITIALIZATIONS (what if I initiate all this in the edit image stuff)
+# PYTORCH INITIALIZATIONS 
 class ann_classifier(nn.Module):
     def __init__(self):
         super(ann_classifier, self).__init__()
