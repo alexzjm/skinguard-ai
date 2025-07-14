@@ -29,20 +29,29 @@ body > p {
     margin-bottom: 30px;
 }
 
-#upload-container {
-    background-color: #fff;
-    padding: 30px;
-    border-radius: 12px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    margin-bottom: 30px;
+.upload-section {
     max-width: 500px;
     width: 100%;
 }
 
-form {
+.app-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.upload-form {
     display: flex;
     flex-direction: column;
     align-items: center;
+    gap: 20px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
 }
 
 label.file-label {
@@ -71,7 +80,7 @@ input[type="file"]:hover {
     border-color: #007BFF;
 }
 
-#preview {
+.image-preview {
     display: none;
     max-width: 200px;
     max-height: 200px;
@@ -169,6 +178,55 @@ input[type="file"]:hover {
 }
 
 
+
+/* Utility Classes */
+.visually-hidden {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    padding: 0 !important;
+    margin: -1px !important;
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    white-space: nowrap !important;
+    border: 0 !important;
+}
+
+.card {
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin-bottom: 30px;
+}
+
+.btn {
+    padding: 12px 30px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 150px;
+}
+
+.btn-primary {
+    color: #fff;
+    background-color: #007BFF;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+}
+
+.btn:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
 
 /* Mobile responsiveness */
 @media (max-width: 600px) {

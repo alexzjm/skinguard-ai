@@ -4,86 +4,132 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SkinGuard AI</title>
+    <title>SkinGuard AI - Skin Lesion Analysis Tool</title>
+    <meta name="description" content="Educational AI tool for skin lesion analysis. Upload images for cancer detection analysis.">
     <script src="{{ url_for('static', filename='script.js') }}"></script>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='stylesheet.css') }}">
 </head>
 
 <body>
-    <h1>SkinGuard AI</h1>
-    <p>Upload a skin lesion image for cancer detection analysis</p>
+    <div class="app-container">
+        <!-- Header Section -->
+        <header class="app-header">
+            <h1 class="app-title">SkinGuard AI</h1>
+            <p class="app-subtitle">Upload a skin lesion image for cancer detection analysis</p>
+        </header>
 
-    <div id="photo-guidelines">
-        <h3>Photo Guidelines for Best Results:</h3>
-        <div class="guidelines-grid">
-            <div class="guideline-item">
-                <h4>Good Lighting</h4>
-                <p>Use natural daylight or bright indoor lighting. Avoid shadows and harsh flash.</p>
-            </div>
-            <div class="guideline-item">
-                <h4>Proper Distance</h4>
-                <p>Keep camera 6-12 inches away. Include the entire lesion plus some surrounding skin.</p>
-            </div>
-            <div class="guideline-item">
-                <h4>Clear Focus</h4>
-                <p>Hold the camera steady. Make sure the image is sharp and not blurry.</p>
-            </div>
-            <div class="guideline-item">
-                <h4>gGood Framing</h4>
-                <p>Center the lesion in the photo. Include a reference object (coin, ruler) if possible.</p>
-            </div>
-        </div>
-        <div class="guidelines-note">
-            <p><strong>Note:</strong> Better photo quality leads to more accurate analysis results.</p>
-        </div>
-    </div>
+        <!-- Main Content Area -->
+        <main class="main-content">
+            
+            <!-- Photo Guidelines Section -->
+            <section class="guidelines-section card">
+                <header class="section-header">
+                    <h2 class="section-title">Photo Guidelines for Best Results</h2>
+                </header>
+                
+                <div class="guidelines-grid">
+                    <div class="guideline-card">
+                        <h3 class="guideline-title">Good Lighting</h3>
+                        <p class="guideline-text">Use natural daylight or bright indoor lighting. Avoid shadows and harsh flash.</p>
+                    </div>
+                    <div class="guideline-card">
+                        <h3 class="guideline-title">Proper Distance</h3>
+                        <p class="guideline-text">Keep camera 6-12 inches away. Include the entire lesion plus some surrounding skin.</p>
+                    </div>
+                    <div class="guideline-card">
+                        <h3 class="guideline-title">Clear Focus</h3>
+                        <p class="guideline-text">Hold the camera steady. Make sure the image is sharp and not blurry.</p>
+                    </div>
+                    <div class="guideline-card">
+                        <h3 class="guideline-title">Good Framing</h3>
+                        <p class="guideline-text">Center the lesion in the photo. Include a reference object (coin, ruler) if possible.</p>
+                    </div>
+                </div>
+                
+                <div class="guidelines-note">
+                    <p class="note-text"><strong>Note:</strong> Better photo quality leads to more accurate analysis results.</p>
+                </div>
+            </section>
 
-    <div id="upload-container">
-        <form id="uploadForm">
-            <label for="file" class="file-label">Choose an image:</label>
-            <input type="file" id="file" name="file" accept="image/*" required>
-            <img id="preview" src="" alt="Image preview">
-            <button type="submit" class="upload-button">Analyze Image</button>
-        </form>
-    </div>
+            <!-- Upload Section -->
+            <section class="upload-section card">
+                <header class="section-header">
+                    <h2 class="section-title visually-hidden">Upload Image</h2>
+                </header>
+                
+                <form id="uploadForm" class="upload-form" enctype="multipart/form-data" aria-label="Image upload form">
+                    <div class="form-group">
+                        <label for="file" class="file-label">Choose an image:</label>
+                        <input 
+                            type="file" 
+                            id="file" 
+                            name="file" 
+                            class="file-input"
+                            accept="image/*" 
+                            required
+                            aria-describedby="file-help"
+                        >
+                        <div id="file-help" class="form-help">
+                            Accepted formats: JPEG, PNG, GIF, BMP, WebP (max 10MB)
+                        </div>
+                    </div>
+                    
+                    <div class="preview-container">
+                        <img id="preview" src="" alt="Selected image preview" class="image-preview">
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary upload-button">
+                        <span class="btn-text">Analyze Image</span>
+                        <span class="btn-loading visually-hidden">Analyzing...</span>
+                    </button>
+                </form>
+            </section>
 
-    <div id="result-container">
-        <div id="result"></div>
-    </div>
-    
-    <div id="medical-disclaimer">
-        <div class="warning-header">
-            <h2>Important Medical Disclaimer</h2>
-        </div>
-        
-        <div class="disclaimer-content">
-            <div class="critical-warning">
-                <p><strong>THIS IS NOT A MEDICAL DIAGNOSIS TOOL</strong></p>
-                <p>This AI tool is for <strong>educational purposes only</strong> and cannot replace professional medical evaluation.</p>
-            </div>
-            
-            <div class="medical-advice">
-                <h3>When to Seek Medical Attention:</h3>
-                <ul>
-                    <li><strong>Immediately:</strong> If you notice sudden bleeding, rapid growth, or painful changes</li>
-                    <li><strong>Soon:</strong> Any new, changing, or unusual skin lesions</li>
-                    <li><strong>Regular checkups:</strong> Annual skin exams with a dermatologist</li>
-                </ul>
-            </div>
-            
-            <div class="limitations">
-                <h3>Tool Limitations:</h3>
-                <ul>
-                    <li>AI results are <strong>not definitive</strong> and may be incorrect</li>
-                    <li>Image quality affects accuracy</li>
-                    <li>Should never delay professional medical consultation</li>
-                </ul>
-            </div>
-            
-            <div class="legal-notice">
-                <p><em>By using this tool, you acknowledge that results are not medical advice and agree to consult healthcare professionals for any skin concerns.</em></p>
-            </div>
-        </div>
+            <!-- Results Section -->
+            <section class="results-section">
+                <div id="result" class="result-content" role="region" aria-live="polite" aria-label="Analysis results"></div>
+            </section>
+
+        </main>
+
+        <!-- Footer with Disclaimer -->
+        <footer class="app-footer">
+            <section class="disclaimer-section card card-warning">
+                <header class="warning-header">
+                    <h2 class="warning-title">Important Medical Disclaimer</h2>
+                </header>
+                
+                <div class="disclaimer-content">
+                    <div class="critical-warning alert alert-danger">
+                        <p class="warning-text"><strong>THIS IS NOT A MEDICAL DIAGNOSIS TOOL</strong></p>
+                        <p class="warning-text">This AI tool is for <strong>educational purposes only</strong> and cannot replace professional medical evaluation.</p>
+                    </div>
+                    
+                    <div class="medical-advice card-section">
+                        <h3 class="subsection-title">When to Seek Medical Attention:</h3>
+                        <ul class="advice-list">
+                            <li><strong>Immediately:</strong> If you notice sudden bleeding, rapid growth, or painful changes</li>
+                            <li><strong>Soon:</strong> Any new, changing, or unusual skin lesions</li>
+                            <li><strong>Regular checkups:</strong> Annual skin exams with a dermatologist</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="limitations card-section">
+                        <h3 class="subsection-title">Tool Limitations:</h3>
+                        <ul class="limitations-list">
+                            <li>AI results are <strong>not definitive</strong> and may be incorrect</li>
+                            <li>Cannot detect all types of skin cancer</li>
+                            <li>Image quality affects accuracy</li>
+                            <li>Should never delay professional medical consultation</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="legal-notice alert alert-info">
+                        <p class="legal-text"><em>By using this tool, you acknowledge that results are not medical advice and agree to consult healthcare professionals for any skin concerns.</em></p>
+                    </div>
+                </div>
+            </section>
+        </footer>
     </div>
 </body>
 
