@@ -152,17 +152,7 @@ input[type="file"]:hover {
     margin: 20px 0;
 }
 
-#disclaimer {
-    max-width: 600px;
-    width: 100%;
-    background-color: #fff3cd;
-    border: 1px solid #ffeaa7;
-    color: #856404;
-    padding: 15px;
-    border-radius: 8px;
-    text-align: center;
-    font-size: 14px;
-}
+
 
 /* Mobile responsiveness */
 @media (max-width: 600px) {
