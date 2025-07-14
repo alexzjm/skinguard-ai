@@ -53,11 +53,11 @@ function agreeToTerms(){
 }*/
 
 document.addEventListener('DOMContentLoaded', function () {
-    console.log("Testing script.js");
-
     const fileInput = document.getElementById('file');
     const preview = document.getElementById('preview');
+    const resultDiv = document.getElementById('result');
 
+    // Image preview functionality
     fileInput.addEventListener('change', function (event) {
         const file = fileInput.files[0];
         if (file) {
@@ -67,36 +67,68 @@ document.addEventListener('DOMContentLoaded', function () {
                 preview.style.display = 'block';
             }
             reader.readAsDataURL(file);
+            
+            // Clear previous results
+            resultDiv.innerHTML = '';
         }
     });
 
-    document.getElementById('uploadForm').addEventListener('submit', function (event) {  // Changed form id
+    // Form submission
+    document.getElementById('uploadForm').addEventListener('submit', async function (event) {
         event.preventDefault();
-        const formData = new FormData();
-        const fileInput = document.getElementById('file');  // Changed element id to file
-        formData.append('file', fileInput.files[0]);
-        formData.append('model', currentModelId);
+        
+        const file = fileInput.files[0];
+        if (!file) {
+            resultDiv.innerHTML = '<p class="error">Please select an image first.</p>';
+            return;
+        }
 
-        fetch('/api/upload', {
-            method: 'POST',
-            body: formData
-        })
-            .then(response => response.json())
-            .then(data => {
-                if (data.error) {
-                    document.getElementById('result').innerText = 'Error: ' + data.error;
-                } else {
-                    if (data.model_used == 0){ //processing based on the model used
-                        threshold = 0.5;
-                        if (data.prediction <= threshold) {
-                            document.getElementById('result').innerText = "You are cancer free. Score: " + data.prediction;
-                        } else {
-                            document.getElementById('result').innerText = "Please see a professional for further diagnosis. Percent: " + data.prediction * 50 + ". Score: " + data.prediction;
-                        }
-                    }
+        // Show loading state
+        resultDiv.innerHTML = '<p class="loading">Analyzing image...</p>';
 
-                }
-            })
-            .catch(error => console.error('Error:', error));
+        try {
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('model', '0'); // Always use the only working model
+
+            const response = await fetch('/api/upload', {
+                method: 'POST',
+                body: formData
+            });
+
+            const data = await response.json();
+
+            if (data.error) {
+                resultDiv.innerHTML = `<p class="error">Error: ${data.error}</p>`;
+            } else {
+                displayResult(data.prediction);
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            resultDiv.innerHTML = '<p class="error">An error occurred while processing your image. Please try again.</p>';
+        }
     });
+
+    function displayResult(prediction) {
+        const threshold = 0.5;
+        const percentage = (prediction * 100).toFixed(1);
+        
+        if (prediction <= threshold) {
+            resultDiv.innerHTML = `
+                <div class="result-success">
+                    <h3>Low Risk Detected</h3>
+                    <p>Confidence Score: ${percentage}%</p>
+                    <p>The analysis suggests a low probability of malignancy.</p>
+                </div>
+            `;
+        } else {
+            resultDiv.innerHTML = `
+                <div class="result-warning">
+                    <h3>High Risk Detected</h3>
+                    <p>Confidence Score: ${percentage}%</p>
+                    <p><strong>Please consult a healthcare professional for further evaluation.</strong></p>
+                </div>
+            `;
+        }
+    }
 });
