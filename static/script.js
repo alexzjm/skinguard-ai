@@ -57,34 +57,112 @@ document.addEventListener('DOMContentLoaded', function () {
     const preview = document.getElementById('preview');
     const resultDiv = document.getElementById('result');
 
-    // Image preview functionality
+    // File validation configuration
+    const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
+    const ALLOWED_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/bmp', 'image/webp'];
+    const MIN_FILE_SIZE = 1024; // 1KB minimum
+
+    // Image preview and validation functionality
     fileInput.addEventListener('change', function (event) {
         const file = fileInput.files[0];
+        
+        // Clear previous results and preview
+        resultDiv.innerHTML = '';
+        preview.style.display = 'none';
+        preview.src = '';
+        
         if (file) {
+            // Validate file
+            const validationResult = validateFile(file);
+            if (!validationResult.isValid) {
+                showError(validationResult.message);
+                fileInput.value = ''; // Clear the input
+                return;
+            }
+            
+            // Show preview if validation passes
             const reader = new FileReader();
             reader.onload = function (e) {
                 preview.src = e.target.result;
                 preview.style.display = 'block';
             }
             reader.readAsDataURL(file);
-            
-            // Clear previous results
-            resultDiv.innerHTML = '';
         }
     });
 
-    // Form submission
+    // File validation function
+    function validateFile(file) {
+        // Check if file exists
+        if (!file) {
+            return { isValid: false, message: 'No file selected.' };
+        }
+        
+        // Check file size (too large)
+        if (file.size > MAX_FILE_SIZE) {
+            return { 
+                isValid: false, 
+                message: `File too large. Maximum size is ${MAX_FILE_SIZE / (1024 * 1024)}MB. Your file is ${(file.size / (1024 * 1024)).toFixed(1)}MB.` 
+            };
+        }
+        
+        // Check file size (too small)
+        if (file.size < MIN_FILE_SIZE) {
+            return { 
+                isValid: false, 
+                message: 'File too small. Please select a valid image file.' 
+            };
+        }
+        
+        // Check file type
+        if (!ALLOWED_TYPES.includes(file.type)) {
+            return { 
+                isValid: false, 
+                message: `Invalid file type. Please upload: JPEG, PNG, GIF, BMP, or WebP images. You uploaded: ${file.type || 'unknown type'}` 
+            };
+        }
+        
+        return { isValid: true, message: '' };
+    }
+
+    // Error display function
+    function showError(message) {
+        resultDiv.innerHTML = `<p class="error">${message}</p>`;
+    }
+
+    // Success message function
+    function showSuccess(message) {
+        resultDiv.innerHTML = `<p class="success">${message}</p>`;
+    }
+
+    // Form submission with enhanced validation
     document.getElementById('uploadForm').addEventListener('submit', async function (event) {
         event.preventDefault();
         
         const file = fileInput.files[0];
+        
+        // Pre-submission validation
         if (!file) {
-            resultDiv.innerHTML = '<p class="error">Please select an image first.</p>';
+            showError('Please select an image first.');
             return;
         }
 
+        // Re-validate file before submission (in case file was changed)
+        const validationResult = validateFile(file);
+        if (!validationResult.isValid) {
+            showError(validationResult.message);
+            fileInput.value = '';
+            preview.style.display = 'none';
+            return;
+        }
+
+        // Disable submit button to prevent double submission
+        const submitButton = event.target.querySelector('button[type="submit"]');
+        const originalButtonText = submitButton.textContent;
+        submitButton.disabled = true;
+        submitButton.textContent = 'Analyzing...';
+
         // Show loading state
-        resultDiv.innerHTML = '<p class="loading">Analyzing image...</p>';
+        resultDiv.innerHTML = '<p class="loading">Analyzing image, please wait...</p>';
 
         try {
             const formData = new FormData();
@@ -96,16 +174,37 @@ document.addEventListener('DOMContentLoaded', function () {
                 body: formData
             });
 
+            // Check if response is ok
+            if (!response.ok) {
+                throw new Error(`Server error: ${response.status} ${response.statusText}`);
+            }
+
             const data = await response.json();
 
             if (data.error) {
-                resultDiv.innerHTML = `<p class="error">Error: ${data.error}</p>`;
-            } else {
+                showError(`Analysis failed: ${data.error}`);
+            } else if (data.prediction !== undefined) {
                 displayResult(data.prediction);
+            } else {
+                showError('Invalid response from server. Please try again.');
             }
         } catch (error) {
-            console.error('Error:', error);
-            resultDiv.innerHTML = '<p class="error">An error occurred while processing your image. Please try again.</p>';
+            console.error('Upload error:', error);
+            
+            // Provide specific error messages based on error type
+            if (error.name === 'TypeError' && error.message.includes('fetch')) {
+                showError('Network error. Please check your internet connection and try again.');
+            } else if (error.message.includes('Server error: 413')) {
+                showError('File too large for server. Please try a smaller image.');
+            } else if (error.message.includes('Server error: 500')) {
+                showError('Server error occurred. Please try again later.');
+            } else {
+                showError('An unexpected error occurred while processing your image. Please try again.');
+            }
+        } finally {
+            // Re-enable submit button
+            submitButton.disabled = false;
+            submitButton.textContent = originalButtonText;
         }
     });
 
