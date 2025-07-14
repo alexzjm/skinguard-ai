@@ -29,10 +29,10 @@ class ann_classifier(nn.Module):
         x = self.fc3(x)
         return x
 
-alexnet = torchvision.models.alexnet(pretrained=True)
+alexnet = torchvision.models.alexnet(weights='DEFAULT')
 
 processor = alexnet.features
-classifier = torch.load("model/final_model_bs32_lr0065_e22.pth", map_location=torch.device('cpu'))
+classifier = torch.load("model/final_model_bs32_lr0065_e22.pth", map_location=torch.device('cpu'), weights_only=False)
 
 processor.eval()
 classifier.eval()
